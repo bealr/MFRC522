@@ -91,7 +91,7 @@ void main(void) {
     init_SPI(); 
     
     
-    GIE = 0; // disable all PIC's interrupts
+    GIE = 0; // disable all PIC's interrupts 
     
     LATB2 = 0; // LED0 off
     for (i=0;i<100;i++) __delay_ms(10);
