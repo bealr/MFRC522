@@ -20,6 +20,7 @@
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
 #pragma config IESO = OFF       // Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
 
+
 // CONFIG2L
 #pragma config PWRT = OFF       // Power-up Timer Enable bit (PWRT disabled)
 #pragma config BOR = OFF        // Brown-out Reset Enable bits (Brown-out Reset disabled in hardware and software)
@@ -77,6 +78,7 @@
 #include <xc.h>
 #include "SPI.h"
 #include "RC522.h"
+#include "uart.h"
 
 
 void init();
@@ -88,7 +90,12 @@ void main(void) {
     char str[100];
     
     init(); // initialize PIC
+    init_soft_uart();
     init_SPI(); 
+    
+    
+    
+    uart_write_s("init ok !\n");
     
     
     GIE = 0; // disable all PIC's interrupts 
@@ -96,13 +103,15 @@ void main(void) {
     LATB2 = 0; // LED0 off
     for (i=0;i<100;i++) __delay_ms(10);
     
-    init_RC522();
     
+    init_RC522();
+        
     while (1)
     {
         status = MFRC522_Request(PICC_REQIDL, str); // check if card is present
         if (status == MI_OK)
         {
+            uart_write_s("ok card !\n");
             LATB2 = 1;                         // blink LED0
             for (i=0;i<10;i++) __delay_ms(10); // .
             LATB2 = 0;                         // .
