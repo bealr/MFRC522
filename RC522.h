@@ -116,3 +116,5 @@ void antenna(char STATE);
 char MFRC522_Request(char reqMode, char *TagType);
 char MFRC522_ToCard(char command, char *sendData, char sendLen, char *backData, unsigned int *backLen);
 void MFRC522_Reset();
+char MFRC522_AntiColl(char *UID);
+char MFRC522_ReadCardSerial(char *str);

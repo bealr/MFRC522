@@ -94,15 +94,12 @@ void main(void) {
     init_SPI(); 
     
     
-    
-    uart_write_s("init ok !\n");
-    
-    
     GIE = 0; // disable all PIC's interrupts 
     
     LATB2 = 0; // LED0 off
     for (i=0;i<100;i++) __delay_ms(10);
     
+    uart_write_s("init ok !\n\r");
     
     init_RC522();
         
@@ -111,7 +108,18 @@ void main(void) {
         status = MFRC522_Request(PICC_REQIDL, str); // check if card is present
         if (status == MI_OK)
         {
-            uart_write_s("ok card !\n");
+            uart_write_s("ok card ! \n\r");
+            
+            if (MFRC522_ReadCardSerial(str) == MI_OK) // get UID
+            {
+                uart_write_s("UID = ");     // and display it
+                uart_write_hex_c(*(str+0));
+                uart_write_hex_c(*(str+1));
+                uart_write_hex_c(*(str+2));
+                uart_write_hex_c(*(str+3));
+                uart_write_s("\n\r");
+            }
+            
             LATB2 = 1;                         // blink LED0
             for (i=0;i<10;i++) __delay_ms(10); // .
             LATB2 = 0;                         // .

@@ -160,3 +160,39 @@ void MFRC522_Reset()
     transmit_SPI(CommandReg, PCD_RESETPHASE);
     for (i=0;i<10;i++) __delay_ms(10);
 }
+
+char MFRC522_AntiColl(char *UID)
+{
+    char status;
+    char i;
+    char bcc = 0;
+    unsigned unLen;
+    transmit_SPI(BitFramingReg, 0x00); // do not send data now
+    UID[0] = PICC_ANTICOLL; // prevent conflict
+    UID[1] = 0x20; // receiver On
+    clear_bits_SPI(Status2Reg, 0x08); // MIFARE Crypto1 : On
+    status = MFRC522_ToCard(PCD_TRANSCEIVE, UID, 2, UID, &unLen); // Transmit
+    if (status == MI_OK)
+    {
+        for (i=0;i<4;i++) // UID = 4 bytes
+        {
+            //  "Block Check Character, it is calculated as exclusive-or over the 4 previous bytes."
+            bcc ^= UID[i];
+        }
+
+        if (bcc != UID[4])
+        {
+            status = MI_ERR;
+        }
+    }
+    return status;
+}
+
+char MFRC522_ReadCardSerial(char *str)
+{
+    char status; 
+    status = MFRC522_AntiColl(str);
+    str[5] = '\0';
+    
+    return status;
+}

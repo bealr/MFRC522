@@ -7,6 +7,7 @@
 
 #include "uart.h"
 #include <xc.h>
+#include <stdio.h>
 
 void init_soft_uart()
 {
@@ -53,4 +54,12 @@ void uart_write_s(const char *data)
     {
         uart_write_c(*(data+i));
     }
+}
+
+void uart_write_hex_c(char car)
+{
+    char tmp[4];
+    
+    sprintf(tmp, "0x%02X ", car);
+    uart_write_s(tmp);
 }

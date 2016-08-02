@@ -8,3 +8,4 @@
 void uart_write_s(const char *data);
 void uart_write_c(char data);
 void init_soft_uart();
+void uart_write_hex_c(char car);
