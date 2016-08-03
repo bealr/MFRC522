@@ -196,3 +196,24 @@ char MFRC522_ReadCardSerial(char *str)
     
     return status;
 }
+
+/* x...xxxx -- RFCfgReg
+ *  000 - 18dB
+ *  001 - 23dB
+ *  010 - 18dB
+ *  011 - 23dB
+ *  100 - 33dB
+ *  101 - 38dB
+ *  110 - 43dB
+ *  111 - 48dB
+ 
+ */
+void MFRC522_setAntGain(char gain)
+{
+    char tmp;
+    
+    tmp = receive_SPI(RFCfgReg);
+    tmp &= 0x70;
+    
+    transmit_SPI(RFCfgReg, tmp);
+}

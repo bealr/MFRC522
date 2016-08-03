@@ -118,3 +118,4 @@ char MFRC522_ToCard(char command, char *sendData, char sendLen, char *backData, 
 void MFRC522_Reset();
 char MFRC522_AntiColl(char *UID);
 char MFRC522_ReadCardSerial(char *str);
+void MFRC522_setAntGain(char gain);
